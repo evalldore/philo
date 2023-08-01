@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/07/31 08:21:35 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/01 09:02:13 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,16 @@
 # include <stdio.h>
 # include <stdint.h>
 # include <stdbool.h>
+# include <unistd.h>
 # include <sys/time.h>
 # include "utils.h"
+# include "forks.h"
 
+# define MSG_FORK "%lu %u has taken a fork\n"
+# define MSG_EAT "%lu %u is eating\n"
+# define MSG_SLEEP "%lu %u is sleeping\n"
+# define MSG_THINK "%lu %u iis thinking\n"
+# define MSG_DIED "%lu %u has died\n"
 /*
 ◦ number_of_philosophers: The number of philosophers and also the number
 of forks.
@@ -41,14 +48,24 @@ typedef struct s_philo_thread
 	pthread_t	pthread;
 }	t_philo_thread;
 
-typedef struct s_philo 
+typedef struct s_philo_state
 {
-	uint32_t	num_philos;
-	uint32_t	num_eats;
-	uint32_t	time_to_die;
-	uint32_t	time_to_eat;
-	uint32_t	time_to_sleep;
-	t_list		*threads_list;
+	uint32_t		num_philos;
+	uint32_t		num_eats;
+	uint32_t		time_to_die;
+	uint32_t		time_to_eat;
+	uint32_t		time_to_sleep;
+	uint64_t		start_time;
+	t_philo_thread	*threads;
+	bool			*forks;
+}	t_philo_state;
+
+typedef struct s_philo
+{
+	uint32_t	id;
+	bool		alive;
+	uint64_t	last_meal;
+	uint32_t	fork_index;
 }	t_philo;
 
 #endif

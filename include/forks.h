@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lists.h                                            :+:      :+:    :+:   */
+/*   forks.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/31 07:47:48 by niceguy           #+#    #+#             */
-/*   Updated: 2023/07/31 08:23:37 by niceguy          ###   ########.fr       */
+/*   Created: 2023/08/01 05:17:05 by niceguy           #+#    #+#             */
+/*   Updated: 2023/08/01 06:33:55 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LISTS_H
-# define LISTS_H
+#ifndef FORKS_H
+# define FORKS_H
+# include <stdint.h>
+# include <stdbool.h>
 # include <stdlib.h>
 
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}	t_list;
-
-
-void	ft_lstclear(t_list **lst, void (*del)(void*));
-void	ft_lstadd_front(t_list **lst, t_list *new);
+bool	forks_init(bool **forks, uint32_t num_forms);
+int32_t	forks_get_available(bool *forks, uint32_t num_forks);
+void	forks_set(bool **forks, bool state, uint32_t index, uint32_t num_forks);
 
 #endif

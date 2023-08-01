@@ -1,10 +1,10 @@
 NAME		:= philo
-SRCS		:= main.c utils.c lists.c
+SRCS		:= main.c utils.c forks.c
 INCDIR		:= include/
 BINDIR		:= bin/
 SRCDIR		:= src/
 OBJS		:= $(addprefix $(BINDIR), $(SRCS:.c=.o))
-CFLAGS		:= -Wall -Wextra -Werror -lpthread
+CFLAGS		:= -Wall -Wextra -Werror -lpthread -g
 RM			:= rm -f
 HEADERS		:= -I ./include
 CC			:= gcc
