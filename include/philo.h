@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/02 04:09:01 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/02 08:10:38 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ typedef struct s_philo_thread
 	pthread_t	pthread;
 }	t_philo_thread;
 
+typedef struct s_philo
+{
+	uint32_t	id;
+	uint64_t	last_meal;
+	uint32_t	num_meals;
+}	t_philo;
+
 typedef struct s_philo_state
 {
 	uint32_t		num_philos;
@@ -57,15 +64,11 @@ typedef struct s_philo_state
 	uint32_t		time_to_sleep;
 	uint64_t		start_time;
 	t_philo_thread	*threads;
+	t_philo			*philos;
 	pthread_mutex_t	*forks;
 	bool			simulating;
 }	t_philo_state;
 
-typedef struct s_philo
-{
-	uint32_t	id;
-	uint64_t	last_meal;
-	uint32_t	fork_index;
-}	t_philo;
+void	*philo_routine(void *ptr);
 
 #endif
