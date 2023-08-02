@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/01 19:12:25 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/02 04:09:01 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,15 +56,14 @@ typedef struct s_philo_state
 	uint32_t		time_to_eat;
 	uint32_t		time_to_sleep;
 	uint64_t		start_time;
-	pthread_mutex_t lock;
 	t_philo_thread	*threads;
-	bool			*forks;
+	pthread_mutex_t	*forks;
+	bool			simulating;
 }	t_philo_state;
 
 typedef struct s_philo
 {
 	uint32_t	id;
-	bool		alive;
 	uint64_t	last_meal;
 	uint32_t	fork_index;
 }	t_philo;
