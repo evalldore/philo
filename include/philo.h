@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/02 08:10:38 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/02 08:42:48 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_philo_state
 	t_philo_thread	*threads;
 	t_philo			*philos;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	death;
 	bool			simulating;
 }	t_philo_state;
 
