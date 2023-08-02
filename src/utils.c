@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 06:32:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/07/31 07:47:27 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/01 19:13:21 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,12 @@ long	ft_atoi(const char *str)
 	while (*str >= '0' && *str <= '9')
 		num = (num * 10) + (*str++ - '0');
 	return (num * m);
+}
+
+uint64_t	get_time()
+{
+	struct timeval tv;
+
+	gettimeofday(&tv, NULL);
+	return (uint64_t)tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }

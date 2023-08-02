@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/01 09:02:13 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/01 19:12:25 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # define MSG_FORK "%lu %u has taken a fork\n"
 # define MSG_EAT "%lu %u is eating\n"
 # define MSG_SLEEP "%lu %u is sleeping\n"
-# define MSG_THINK "%lu %u iis thinking\n"
+# define MSG_THINK "%lu %u is thinking\n"
 # define MSG_DIED "%lu %u has died\n"
 /*
 ◦ number_of_philosophers: The number of philosophers and also the number
@@ -56,6 +56,7 @@ typedef struct s_philo_state
 	uint32_t		time_to_eat;
 	uint32_t		time_to_sleep;
 	uint64_t		start_time;
+	pthread_mutex_t lock;
 	t_philo_thread	*threads;
 	bool			*forks;
 }	t_philo_state;

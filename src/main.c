@@ -6,66 +6,25 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/01 09:05:08 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/01 20:34:55 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-uint32_t	get_id()
+void	*philo_routine(void *ptr)
 {
 	static uint32_t	index;
-	return (++index);
-}
-
-/*bool	philo_can_eat(t_philo_state	*state, t_philo *philo)
-{
-	uint32_t	left_index;
-	uint32_t	right_index;
-
-	if (state->num_philos < 2)
-		return (false);
-	left_index = 0;
-	while (left_index < state->num_philos)
-	{
-		if (state->forks[left_index])
-		{
-			right_index = left_index + 1;
-			if (right_index == state->num_philos)
-				right_index = 0;
-			if (state->forks[right_index])
-			{
-				philo->fork_index = left_index;
-				state->forks[left_index] = false;
-				state->forks[right_index] = false;
-				return (true);
-			}
-		}
-		left_index++;
-	}
-	return (false);
-}*/
-
-uint64_t	get_time()
-{
-	struct timeval tv;
-
-	gettimeofday(&tv, NULL);
-	return (uint64_t)tv.tv_sec * 1000 + tv.tv_usec / 1000;
-}
-
-void	*philo_func(void *ptr)
-{
 	t_philo_state	*state;
 	t_philo			philo;
 
-	(void)state;
 	state = ptr;
-	philo.id = get_id();
+	philo.id = ++index;
 	philo.alive = true;
 	philo.last_meal = get_time();
 	while (philo.alive)
 	{
+		//pthread_mutex_lock(&state->lock);
 		while (forks_get_available(state->forks, state->num_philos) < 0)
 		{
 			if ((get_time() - philo.last_meal) >= state->time_to_die)
@@ -76,10 +35,14 @@ void	*philo_func(void *ptr)
 		}
 		philo.fork_index = (uint32_t)forks_get_available(state->forks, state->num_philos);
 		forks_set(&state->forks, false, philo.fork_index, state->num_philos);
+		printf(MSG_FORK, get_time(), philo.id);
+		//pthread_mutex_unlock(&state->lock);
 		printf(MSG_EAT, get_time(), philo.id);
 		usleep(state->time_to_eat * 1000);
 		philo.last_meal = get_time();
+		//pthread_mutex_lock(&state->lock);
 		forks_set(&state->forks, true, philo.fork_index, state->num_philos);
+		//pthread_mutex_unlock(&state->lock);
 		printf(MSG_SLEEP, get_time(), philo.id);
 		usleep(state->time_to_sleep * 1000);
 	}
@@ -98,7 +61,7 @@ bool	philo_create_threads(t_philo_state *state)
 	while (num < state->num_philos)
 	{
 		pt = &state->threads[num];
-		pt->ret = pthread_create(&pt->pthread, NULL, philo_func, state);
+		pthread_create(&pt->pthread, NULL, philo_routine, state);
 		num++;
 	}
 	return (true);
@@ -113,7 +76,8 @@ void	philo_join_threads(t_philo_state *state)
 	while (num < state->num_philos)
 	{
 		pt = state->threads[num];
-		pthread_join(pt.pthread, NULL);
+		pt.ret = pthread_join(pt.pthread, NULL);
+		printf("%d: returns %d\n", num, pt.ret);
 		num++;
 	}
 }
@@ -122,6 +86,8 @@ bool	philo_init(t_philo_state *state, int argc, char **argv)
 {
 	if (argc < 5)
 		return false;
+	if (pthread_mutex_init(&state->lock, NULL) < 0)
+		return (false);
 	state->start_time = get_time();
 	state->num_eats = 0;
 	state->num_philos = (uint32_t)ft_atoi(argv[1]);
