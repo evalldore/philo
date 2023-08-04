@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:13:58 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/04 01:41:43 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/04 05:55:47 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,16 @@ bool	forks_init(pthread_mutex_t **forks, uint32_t num_forks)
 		num++;
 	}
 	return (true);
+}
+
+void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks)
+{
+	uint32_t	i;
+
+	i = 0;
+	while (i < num_forks)
+		pthread_mutex_destroy(&(*forks)[i++]);
+	free(*forks);
+	*forks = NULL;
 }
 

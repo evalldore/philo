@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/03 07:57:58 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/04 06:27:30 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,6 @@ typedef struct s_philo_state
 	bool			simulating;
 }	t_philo_state;
 
-void	*philo_routine(void *ptr);
+void	*ph_routine(void *ptr);
 
 #endif

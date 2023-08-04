@@ -12,7 +12,7 @@ CC			:= gcc
 all : $(NAME)
 
 leaks :
-	valgrind --leak-check=full ./philo 2 3000 3500 2000 3
+	valgrind --leak-check=full ./philo 10 20000 3500 2000 3 100
 
 $(BINDIR)%.o : $(SRCDIR)%.c
 	@$(CC) -c $(CFLAGS) -o $@ $^ $(HEADERS)

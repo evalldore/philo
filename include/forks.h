@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:17:05 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/04 01:41:48 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/04 05:55:04 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,6 @@
 # include <pthread.h>
 
 bool	forks_init(pthread_mutex_t **forks, uint32_t num_forks);
+void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks);
 
 #endif

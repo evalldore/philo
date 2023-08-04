@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/04 05:12:53 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/04 08:07:22 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static bool	eat(t_philo_state *state, t_philo *philo)
 	return (state->simulating);
 }
 
-void	*philo_routine(void *ptr)
+void	*ph_routine(void *ptr)
 {
 	static uint32_t	index;
 	t_philo_state	*state;
