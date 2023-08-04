@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/02 09:18:05 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/04 05:51:17 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static bool	ph_init(t_philo_state *state, int argc, char **argv)
 	if (!ph_create_philos(state))
 		return (false);
 	state->simulating = true;
+	pthread_mutex_init(&state->meals, NULL);
 	pthread_mutex_init(&state->death, NULL);
 	if (!ph_create_threads(state))
 		return (false);
@@ -77,25 +78,29 @@ static bool	ph_init(t_philo_state *state, int argc, char **argv)
 static void	ph_simulate(t_philo_state *state)
 {
 	uint32_t		i;
-	t_philo			*philo;
+	bool			ate_all;
 
 	while (state->simulating)
 	{
 		i = 0;
+		ate_all = true;
 		while (i < state->num_philos)
 		{
-			philo = &state->philos[i];
-			pthread_mutex_lock(&state->death);
-			if ((get_time(state->start_time) - philo->last_meal) >= state->time_to_die)
+			pthread_mutex_lock(&state->meals);
+			if ((get_time(state->start_time) - state->philos[i].last_meal) >= state->time_to_die)
 			{
-				printf(MSG_DIED, get_time(state->start_time), philo->id);
 				state->simulating = false;
+				printf(MSG_DIED, get_time(state->start_time), state->philos[i].id);
 			}
-			pthread_mutex_unlock(&state->death);
+			if (state->philos[i].num_meals != state->num_eats)
+				ate_all = false;
+			pthread_mutex_unlock(&state->meals);
 			if (!state->simulating)
 				break;
 			i++;
 		}
+		if (state->num_eats > 0 && ate_all)
+			state->simulating = false;
 	}
 }
 
@@ -110,14 +115,13 @@ int main(int argc, char **argv)
 	i = 0;
 	while (i < state.num_philos)
 	{
-		//state.threads[i].ret = pthread_join(state.threads[i].pthread, NULL);
-		pthread_detach(state.threads[i].pthread);
-		pthread_mutex_destroy(&state.forks[i]);
+		state.threads[i].ret = pthread_join(state.threads[i].pthread, NULL);
 		i++;
 	}
 	free(state.forks);
 	free(state.philos);
 	free(state.threads);
+	pthread_mutex_destroy(&state.meals);
 	pthread_mutex_destroy(&state.death);
 	return (0);
 }
