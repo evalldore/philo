@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/04 08:23:33 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/07 08:37:50 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,25 @@ static void	ph_simulate(t_philo_state *state)
 	{
 		i = 0;
 		ate_all = true;
+		pthread_mutex_lock(&state->meals);
+		pthread_mutex_lock(&state->death);
 		while (i < state->num_philos)
 		{
-			pthread_mutex_lock(&state->meals);
 			if ((get_time(state->start_time) - state->philos[i].last_meal) >= state->time_to_die)
 			{
 				state->simulating = false;
 				printf(MSG_DIED, get_time(state->start_time), state->philos[i].id);
 			}
-			if (state->philos[i].num_meals != state->num_eats)
-				ate_all = false;
-			pthread_mutex_unlock(&state->meals);
 			if (!state->simulating)
 				break;
+			if (state->philos[i].num_meals != state->num_eats)
+				ate_all = false;
 			i++;
 		}
 		if (state->num_eats > 0 && ate_all)
 			state->simulating = false;
+		pthread_mutex_unlock(&state->meals);
+		pthread_mutex_unlock(&state->death);
 	}
 }
 
