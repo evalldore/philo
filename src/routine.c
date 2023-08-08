@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/07 23:53:25 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/08 00:11:01 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	*ph_routine(void *ptr)
 	t_philo				*philo;
 
 	state = ptr;
-	philo = &state->philos[atomic_fetch_add(&index,1)];
+	philo = &state->philos[index++];
 	while (1)
 	{
 		if (!check_simulate(state))

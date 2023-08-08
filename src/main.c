@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/07 08:37:50 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/08 00:41:20 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,10 @@ static void	ph_simulate(t_philo_state *state)
 			{
 				state->simulating = false;
 				printf(MSG_DIED, get_time(state->start_time), state->philos[i].id);
-			}
-			if (!state->simulating)
 				break;
-			if (state->philos[i].num_meals != state->num_eats)
+			}
+			if (state->philos[i++].num_meals != state->num_eats)
 				ate_all = false;
-			i++;
 		}
 		if (state->num_eats > 0 && ate_all)
 			state->simulating = false;
