@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/07 23:41:09 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/07 23:53:25 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,12 @@ static bool	eat(t_philo_state *state, t_philo *philo)
 
 void	*ph_routine(void *ptr)
 {
-	static uint32_t	index;
-	t_philo_state	*state;
-	t_philo			*philo;
+	static atomic_int	index;
+	t_philo_state		*state;
+	t_philo				*philo;
 
 	state = ptr;
-	philo = &state->philos[index++];
+	philo = &state->philos[atomic_fetch_add(&index,1)];
 	while (1)
 	{
 		if (!check_simulate(state))

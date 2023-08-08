@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/07 08:11:34 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/07 23:51:43 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <sys/time.h>
 # include "utils.h"
 # include "forks.h"
+# include <stdatomic.h>
 
 # define MSG_FORK "%lu %u has taken a fork\n"
 # define MSG_EAT "%lu %u is eating\n"
