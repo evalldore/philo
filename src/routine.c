@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/07 08:48:43 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/07 23:41:09 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static bool check_simulate(t_philo_state *state)
 static bool pickup_fork(t_philo_state *state, uint32_t fork_index)
 {
 	pthread_mutex_lock(&state->forks[fork_index]);
-	if (!state->simulating)
+	if (!check_simulate(state))
 	{
 		pthread_mutex_unlock(&state->forks[fork_index]);
 		return (false);
