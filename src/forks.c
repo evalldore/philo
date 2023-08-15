@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:13:58 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/15 14:14:11 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/15 16:52:15 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,3 @@ void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks)
 	free(*forks);
 	*forks = NULL;
 }
-

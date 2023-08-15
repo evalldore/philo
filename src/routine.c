@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/15 15:01:04 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/15 16:52:16 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static bool	pickup_fork(t_philo_state *state, uint32_t pid, uint32_t fork_index)
 		pthread_mutex_unlock(&state->forks[fork_index]);
 		return (false);
 	}
-	printf(MSG_FORK, get_time(state->start_time), pid);
+	printf(MSG_FORK, get_time(state->start), pid);
 	return (true);
 }
 
@@ -67,8 +67,8 @@ static bool	eat(t_philo_state *state, t_philo *philo)
 	pthread_mutex_lock(&state->meals);
 	if (!check_simulate(state))
 		return (false);
-	printf(MSG_EAT, get_time(state->start_time), philo->id);
-	philo->last_meal = get_time(state->start_time);
+	printf(MSG_EAT, get_time(state->start), philo->id);
+	philo->last_meal = get_time(state->start);
 	philo->num_meals++;
 	pthread_mutex_unlock(&state->meals);
 	usleep(state->time_to_eat * 1000);
@@ -89,11 +89,11 @@ void	*ph_routine(void *ptr)
 	{
 		if (!eat(state, philo))
 			return (NULL);
-		printf(MSG_SLEEP, get_time(state->start_time), philo->id);
+		printf(MSG_SLEEP, get_time(state->start), philo->id);
 		usleep(state->time_to_sleep * 1000);
 		if (!check_simulate(state))
 			return (NULL);
-		printf(MSG_THINK, get_time(state->start_time), philo->id);
+		printf(MSG_THINK, get_time(state->start), philo->id);
 	}
 	return (NULL);
 }

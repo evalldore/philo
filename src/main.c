@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/15 14:20:56 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/15 16:53:16 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static bool	ph_create_philos(t_philo_state *state)
 	while (i < state->num_philos)
 	{
 		state->philos[i].id = i + 1;
-		state->philos[i].last_meal = get_time(state->start_time);
+		state->philos[i].last_meal = get_time(state->start);
 		state->philos[i].num_meals = 0;
 		i++;
 	}
@@ -55,13 +55,13 @@ static bool	ph_init(t_philo_state *state, int argc, char **argv)
 	state->time_to_die = (uint32_t)ft_atoi(argv[2]);
 	state->time_to_eat = (uint32_t)ft_atoi(argv[3]);
 	state->time_to_sleep = (uint32_t)ft_atoi(argv[4]);
-	if (state->num_philos == 0 || state->time_to_die == 0||
-	state->time_to_eat == 0 || state->time_to_sleep == 0)
+	if (state->num_philos <= 0 || state->time_to_die <= 0 
+		|| state->time_to_eat <= 0 || state->time_to_sleep <= 0)
 		return (false);
 	state->num_eats = 0;
 	if (argc == 6)
 		state->num_eats = (uint32_t)ft_atoi(argv[5]);
-	state->start_time = get_time(0);
+	state->start = get_time(0);
 	if (!forks_init(&(state->forks), state->num_philos))
 		return (false);
 	if (!ph_create_philos(state))
@@ -76,32 +76,32 @@ static bool	ph_init(t_philo_state *state, int argc, char **argv)
 	return (true);
 }
 
-static void	ph_simulate(t_philo_state *state)
+static void	ph_simulate(t_philo_state *s)
 {
 	uint32_t		i;
 	bool			ate_all;
 
-	while (state->simulating)
+	while (s->simulating)
 	{
 		i = 0;
 		ate_all = true;
-		pthread_mutex_lock(&state->meals);
-		pthread_mutex_lock(&state->death);
-		while (i < state->num_philos)
+		pthread_mutex_lock(&s->meals);
+		pthread_mutex_lock(&s->death);
+		while (i < s->num_philos)
 		{
-			if ((get_time(state->start_time) - state->philos[i].last_meal) >= state->time_to_die)
+			if ((get_time(s->start) - s->philos[i].last_meal) >= s->time_to_die)
 			{
-				state->simulating = false;
-				printf(MSG_DIED, get_time(state->start_time), state->philos[i].id);
+				s->simulating = false;
+				printf(MSG_DIED, get_time(s->start), s->philos[i].id);
 				break ;
 			}
-			if (state->philos[i++].num_meals != state->num_eats)
+			if (s->philos[i++].num_meals != s->num_eats)
 				ate_all = false;
 		}
-		if (state->num_eats > 0 && ate_all)
-			state->simulating = false;
-		pthread_mutex_unlock(&state->meals);
-		pthread_mutex_unlock(&state->death);
+		if (s->num_eats > 0 && ate_all)
+			s->simulating = false;
+		pthread_mutex_unlock(&s->meals);
+		pthread_mutex_unlock(&s->death);
 	}
 }
 

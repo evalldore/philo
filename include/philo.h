@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/15 14:30:02 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/15 16:52:13 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct s_philo_state
 	uint32_t		time_to_die;
 	uint32_t		time_to_eat;
 	uint32_t		time_to_sleep;
-	uint64_t		start_time;
+	uint64_t		start;
 	t_philo_thread	*threads;
 	t_philo			*philos;
 	pthread_mutex_t	*forks;
