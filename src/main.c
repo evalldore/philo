@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/08 00:41:20 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/15 08:53:52 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static bool	ph_create_philos(t_philo_state *state)
 	}
 	return (true);
 }
-
+	
 static bool	ph_init(t_philo_state *state, int argc, char **argv)
 {
 	state->num_philos = (uint32_t)ft_atoi(argv[1]);
@@ -67,8 +67,10 @@ static bool	ph_init(t_philo_state *state, int argc, char **argv)
 	if (!ph_create_philos(state))
 		return (false);
 	state->simulating = true;
-	pthread_mutex_init(&state->meals, NULL);
-	pthread_mutex_init(&state->death, NULL);
+	if (pthread_mutex_init(&state->meals, NULL) != 0)
+		return (false);
+	if (pthread_mutex_init(&state->death, NULL) != 0)
+		return (false);
 	if (!ph_create_threads(state))
 		return (false);
 	return (true);

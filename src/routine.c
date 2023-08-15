@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/08 00:11:01 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/08 01:25:02 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,8 @@ void	*ph_routine(void *ptr)
 
 	state = ptr;
 	philo = &state->philos[index++];
-	while (1)
+	while (check_simulate(state))
 	{
-		if (!check_simulate(state))
-			return (NULL);
 		if (!eat(state, philo))
 			return (NULL);
 		printf(MSG_SLEEP, get_time(state->start_time), philo->id);
