@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/08 01:25:02 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/15 15:01:04 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static bool check_simulate(t_philo_state *state)
+static bool	check_simulate(t_philo_state *state)
 {
 	pthread_mutex_lock(&state->death);
 	if (!state->simulating)
@@ -24,7 +24,7 @@ static bool check_simulate(t_philo_state *state)
 	return (true);
 }
 
-static bool pickup_fork(t_philo_state *state, uint32_t fork_index)
+static bool	pickup_fork(t_philo_state *state, uint32_t pid, uint32_t fork_index)
 {
 	pthread_mutex_lock(&state->forks[fork_index]);
 	if (!check_simulate(state))
@@ -32,20 +32,36 @@ static bool pickup_fork(t_philo_state *state, uint32_t fork_index)
 		pthread_mutex_unlock(&state->forks[fork_index]);
 		return (false);
 	}
+	printf(MSG_FORK, get_time(state->start_time), pid);
+	return (true);
+}
+
+static bool	ready(t_philo_state *state, uint32_t philo_id)
+{
+	uint32_t		next_fork;
+
+	next_fork = philo_id % state->num_philos;
+	if ((philo_id % 2) == 0)
+	{
+		if (!pickup_fork(state, philo_id, philo_id - 1))
+			return (false);
+		if (!pickup_fork(state, philo_id, next_fork))
+			return (false);
+		return (true);
+	}
+	if (!pickup_fork(state, philo_id, next_fork))
+		return (false);
+	if (!pickup_fork(state, philo_id, philo_id - 1))
+		return (false);
 	return (true);
 }
 
 static bool	eat(t_philo_state *state, t_philo *philo)
 {
 	uint32_t		next_fork;
-	
+
 	next_fork = philo->id % state->num_philos;
-	if (!pickup_fork(state, philo->id - 1))
-		return (false);
-	printf(MSG_FORK, get_time(state->start_time), philo->id);
-	if (!pickup_fork(state, next_fork))
-		return (false);
-	printf(MSG_FORK, get_time(state->start_time), philo->id);
+	ready(state, philo->id);
 	if (!check_simulate(state))
 		return (false);
 	pthread_mutex_lock(&state->meals);

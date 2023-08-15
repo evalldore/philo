@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 06:32:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/02 06:10:18 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/15 14:15:48 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ long	ft_atoi(const char *str)
 
 uint64_t	get_time(uint64_t start)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return ((uint64_t)tv.tv_sec * 1000 + tv.tv_usec / 1000) - start;
+	return (((uint64_t)tv.tv_sec * 1000 + tv.tv_usec / 1000) - start);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/08 00:31:16 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/15 14:30:02 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@
 # include "utils.h"
 # include "forks.h"
 
-# define MSG_FORK "%lu %u has taken a fork\n"
-# define MSG_EAT "%lu %u is eating\n"
-# define MSG_SLEEP "%lu %u is sleeping\n"
-# define MSG_THINK "%lu %u is thinking\n"
-# define MSG_DIED "%lu %u\033[0;31m has died\n\033[0;37m"
+# define MSG_FORK "%llu %u has taken a fork\n"
+# define MSG_EAT "%llu %u is eating\n"
+# define MSG_SLEEP "%llu %u is sleeping\n"
+# define MSG_THINK "%llu %u is thinking\n"
+# define MSG_DIED "%llu %u\033[0;31m has died\n\033[0;37m"
 /*
 ◦ number_of_philosophers: The number of philosophers and also the number
 of forks.

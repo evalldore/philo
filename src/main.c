@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/15 08:53:52 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/15 14:20:56 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static bool	ph_create_philos(t_philo_state *state)
 	}
 	return (true);
 }
-	
+
 static bool	ph_init(t_philo_state *state, int argc, char **argv)
 {
 	state->num_philos = (uint32_t)ft_atoi(argv[1]);
@@ -93,7 +93,7 @@ static void	ph_simulate(t_philo_state *state)
 			{
 				state->simulating = false;
 				printf(MSG_DIED, get_time(state->start_time), state->philos[i].id);
-				break;
+				break ;
 			}
 			if (state->philos[i++].num_meals != state->num_eats)
 				ate_all = false;
@@ -105,7 +105,7 @@ static void	ph_simulate(t_philo_state *state)
 	}
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_philo_state	state;
 	uint32_t		i;
