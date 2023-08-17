@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/15 16:52:13 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/16 10:22:57 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@
 # include "utils.h"
 # include "forks.h"
 
-# define MSG_FORK "%llu %u has taken a fork\n"
-# define MSG_EAT "%llu %u is eating\n"
-# define MSG_SLEEP "%llu %u is sleeping\n"
-# define MSG_THINK "%llu %u is thinking\n"
-# define MSG_DIED "%llu %u\033[0;31m has died\n\033[0;37m"
+# define MSG_FORK "%lu %u has taken a fork\n"
+# define MSG_EAT "%lu %u is eating\n"
+# define MSG_SLEEP "%lu %u is sleeping\n"
+# define MSG_THINK "%lu %u is thinking\n"
+# define MSG_DIED "%lu %u\033[0;31m has died\n\033[0;37m"
 /*
 ◦ number_of_philosophers: The number of philosophers and also the number
 of forks.
@@ -52,8 +52,8 @@ typedef struct s_philo_thread
 typedef struct s_philo
 {
 	uint32_t	id;
-	uint64_t	last_meal;
-	uint32_t	num_meals;
+	atomic_int_fast64_t	last_meal;
+	atomic_int_fast32_t	num_meals;
 }	t_philo;
 
 typedef struct s_philo_state
@@ -66,8 +66,7 @@ typedef struct s_philo_state
 	uint64_t		start;
 	t_philo_thread	*threads;
 	t_philo			*philos;
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	meals;
+	atomic_bool		*forks;
 	pthread_mutex_t	death;
 	bool			simulating;
 }	t_philo_state;

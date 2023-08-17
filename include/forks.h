@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:17:05 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/07 08:11:31 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/16 10:14:19 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <stdbool.h>
 # include <stdlib.h>
 # include <pthread.h>
+# include <stdatomic.h>
 
-bool	forks_init(pthread_mutex_t **forks, uint32_t num_forks);
-void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks);
+bool	forks_init(atomic_bool **forks, uint32_t num_forks);
 
 #endif
