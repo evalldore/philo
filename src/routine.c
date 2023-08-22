@@ -3,97 +3,103 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/16 10:25:33 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/22 16:51:04 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static bool	check_simulate(t_philo_state *state)
+static bool	check_simulate(t_philo *philo)
 {
-	pthread_mutex_lock(&state->death);
-	if (!state->simulating)
+	pthread_mutex_lock(philo->death);
+	if (!philo->simulating)
 	{
-		pthread_mutex_unlock(&state->death);
+		pthread_mutex_unlock(philo->death);
 		return (false);
 	}
-	pthread_mutex_unlock(&state->death);
+	pthread_mutex_unlock(philo->death);
 	return (true);
 }
 
-static bool	pickup_fork(t_philo_state *state, uint32_t pid, uint32_t fork_index)
+static void	ph_print(t_philo *philo, char *msg, uint64_t time)
 {
-	while (!state->forks[fork_index])
+	pthread_mutex_lock(philo->print);
+	printf(msg, time, philo->id);
+	pthread_mutex_unlock(philo->print);
+}
+
+static bool	pickup_fork(t_philo *philo, uint32_t fork_index)
+{
+	pthread_mutex_lock(philo->forks[fork_index]);
+	if (!check_simulate(philo))
 	{
-		if (!check_simulate(state))
-			return (false);
+		pthread_mutex_unlock(philo->forks[fork_index]);
+		return (false);
 	}
-	state->forks[fork_index] = false;
-	printf(MSG_FORK, get_time(state->start), pid);
+	ph_print(philo, MSG_FORK, get_time(philo->rules.start));
 	return (true);
 }
 
-static bool	ready(t_philo_state *state, uint32_t philo_id)
+static bool	ready(t_philo *philo)
 {
-	uint32_t		next_fork;
-
-	next_fork = philo_id % state->num_philos;
-	if ((philo_id % 2) == 0)
+	if (!pickup_fork(philo, 0))
+		return (false);
+	if (!pickup_fork(philo, 1))
 	{
-		if (!pickup_fork(state, philo_id, philo_id - 1))
-			return (false);
-		if (!pickup_fork(state, philo_id, next_fork))
-			return (false);
-		return (true);
+		pthread_mutex_unlock(philo->forks[0]);
+		return (false);
 	}
-	if (!pickup_fork(state, philo_id, next_fork))
-		return (false);
-	if (!pickup_fork(state, philo_id, philo_id - 1))
-		return (false);
 	return (true);
 }
 
-static bool	eat(t_philo_state *state, t_philo *philo)
+static bool	ph_sleep(t_philo *philo, uint64_t delay)
 {
-	uint32_t		next_fork;
+	uint64_t	start;
 
-	next_fork = philo->id % state->num_philos;
-	ready(state, philo->id);
-	if (!check_simulate(state))
+	start = get_time(philo->rules.start);
+	while ((get_time(philo->rules.start) - start) < delay)
+	{
+		if (!check_simulate(philo))
+			return (false);
+		usleep(1000);
+	}
+	return (true);
+}
+
+static bool	eat(t_philo *philo)
+{
+	ready(philo);
+	if (!check_simulate(philo))
 		return (false);
-	if (!check_simulate(state))
-		return (false);
-	printf(MSG_EAT, get_time(state->start), philo->id);
-	philo->last_meal = (atomic_int_fast64_t)get_time(state->start);
+	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
+	pthread_mutex_lock(philo->death);
+	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
-	usleep(state->time_to_eat * 1000);
-	state->forks[philo->id - 1] = true;
-	state->forks[next_fork] = true;
-	return (check_simulate(state));
+	pthread_mutex_unlock(philo->death);
+	ph_sleep(philo, philo->rules.time_to_eat);
+	pthread_mutex_unlock(philo->forks[0]);
+	pthread_mutex_unlock(philo->forks[1]);
+	return (check_simulate(philo));
 }
 
 void	*ph_routine(void *ptr)
 {
-	static atomic_int	index;
-	t_philo_state		*state;
 	t_philo				*philo;
 
-	state = ptr;
-	philo = &state->philos[index++];
-	if (state->num_philos < 2)
-		return (NULL);
-	while (check_simulate(state))
+	philo = ptr;
+	while (philo->simulating)
 	{
-		if (!eat(state, philo))
+		if (!eat(philo))
 			return (NULL);
-		printf(MSG_SLEEP, get_time(state->start), philo->id);
-		usleep(state->time_to_sleep * 1000);
-		if (!check_simulate(state))
+		ph_print(philo, MSG_SLEEP, get_time(philo->rules.start));
+		if (!ph_sleep(philo, philo->rules.time_to_sleep))
 			return (NULL);
-		printf(MSG_THINK, get_time(state->start), philo->id);
+		if (!check_simulate(philo))
+			return (NULL);
+		ph_print(philo, MSG_THINK, get_time(philo->rules.start));
 	}
 	return (NULL);
 }

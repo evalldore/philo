@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/16 10:22:57 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/22 15:43:44 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@
 # include "utils.h"
 # include "forks.h"
 
-# define MSG_FORK "%lu %u has taken a fork\n"
-# define MSG_EAT "%lu %u is eating\n"
-# define MSG_SLEEP "%lu %u is sleeping\n"
-# define MSG_THINK "%lu %u is thinking\n"
-# define MSG_DIED "%lu %u\033[0;31m has died\n\033[0;37m"
+# define MSG_FORK "%llu %u has taken a fork\n"
+# define MSG_EAT "%llu %u is eating\n"
+# define MSG_SLEEP "%llu %u is sleeping\n"
+# define MSG_THINK "%llu %u is thinking\n"
+# define MSG_DIED "%llu %u\033[0;31m has died\n\033[0;37m"
 /*
 ◦ number_of_philosophers: The number of philosophers and also the number
 of forks.
@@ -43,33 +43,38 @@ times, the simulation stops. If not specified, the simulation stops when a
 philosopher dies.
 */
 
-typedef struct s_philo_thread
+typedef struct s_rules
 {
-	int			ret;
-	pthread_t	pthread;
-}	t_philo_thread;
-
-typedef struct s_philo
-{
-	uint32_t	id;
-	atomic_int_fast64_t	last_meal;
-	atomic_int_fast32_t	num_meals;
-}	t_philo;
-
-typedef struct s_philo_state
-{
-	uint32_t		num_philos;
 	uint32_t		num_eats;
 	uint32_t		time_to_die;
 	uint32_t		time_to_eat;
 	uint32_t		time_to_sleep;
 	uint64_t		start;
-	t_philo_thread	*threads;
-	t_philo			*philos;
-	atomic_bool		*forks;
-	pthread_mutex_t	death;
+}	t_rules;
+
+typedef struct s_philo
+{
+	uint32_t			id;
+	uint64_t			last_meal;
+	uint64_t			num_meals;
+	pthread_mutex_t		*forks[2];
+	pthread_mutex_t		*death;
+	pthread_mutex_t		*print;
+	bool				simulating;
+	t_rules				rules;
+}	t_philo;
+
+typedef struct s_state
+{
 	bool			simulating;
-}	t_philo_state;
+	uint32_t		num_philos;
+	t_rules			rules;
+	pthread_t		*threads;
+	t_philo			*philos;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	death;
+	pthread_mutex_t	print;
+}	t_state;
 
 void	*ph_routine(void *ptr);
 
