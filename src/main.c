@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/23 16:03:54 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/23 16:14:01 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ static bool	ph_create_philos(t_state *state)
 
 static bool	ph_init(t_state *state, int argc, char **argv)
 {
+	state->forks = NULL;
+	state->threads = NULL;
 	state->num_philos = (uint32_t)ft_atoi(argv[1]);
 	state->rules.time_to_die = (uint32_t)ft_atoi(argv[2]);
 	state->rules.time_to_eat = (uint32_t)ft_atoi(argv[3]);
