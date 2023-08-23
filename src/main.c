@@ -6,23 +6,23 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/22 16:51:57 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/23 14:44:02 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static bool	ph_create_threads(t_state *state)
+static bool	ph_create_threads(t_state *s)
 {
 	uint32_t		i;
 
 	i = 0;
-	state->threads = malloc(sizeof(pthread_t) * state->num_philos);
-	if (!state->threads)
+	s->threads = malloc(sizeof(pthread_t) * s->num_philos);
+	if (!s->threads)
 		return (false);
-	while (i < state->num_philos)
+	while (i < s->num_philos)
 	{
-		if (pthread_create(&state->threads[i], NULL, ph_routine, &state->philos[i]) < 0)
+		if (pthread_create(&s->threads[i], NULL, ph_routine, &s->philos[i]) < 0)
 			return (false);
 		i++;
 	}
@@ -35,11 +35,6 @@ static void	ph_assign_forks(t_state *state, uint32_t id)
 
 	fid[0] = id;
 	fid[1] = (id + 1) % state->num_philos;
-	if (id % 2)
-	{
-		fid[0] = fid[1];
-		fid[1] = id;
-	}
 	state->philos[id].forks[0] = &state->forks[fid[0]];
 	state->philos[id].forks[1] = &state->forks[fid[1]];
 }

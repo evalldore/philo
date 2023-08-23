@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/22 15:43:44 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/23 14:24:15 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_philo
 	pthread_mutex_t		*forks[2];
 	pthread_mutex_t		*death;
 	pthread_mutex_t		*print;
+	pthread_mutex_t		*meals;
 	bool				simulating;
 	t_rules				rules;
 }	t_philo;
@@ -74,6 +75,7 @@ typedef struct s_state
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	death;
 	pthread_mutex_t	print;
+	pthread_mutex_t	meals;
 }	t_state;
 
 void	*ph_routine(void *ptr);

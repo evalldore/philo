@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/22 16:51:04 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/23 14:54:17 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,17 @@ static bool	pickup_fork(t_philo *philo, uint32_t fork_index)
 	return (true);
 }
 
-static bool	ready(t_philo *philo)
+static bool	ph_sleep(t_philo *philo, uint64_t delay)
+{
+	uint64_t	start;
+
+	start = get_time(philo->rules.start);
+	while ((get_time(philo->rules.start) - start) < delay)
+		usleep(1000);
+	return (check_simulate(philo));
+}
+
+static bool	eat(t_philo *philo)
 {
 	if (!pickup_fork(philo, 0))
 		return (false);
@@ -52,36 +62,14 @@ static bool	ready(t_philo *philo)
 		pthread_mutex_unlock(philo->forks[0]);
 		return (false);
 	}
-	return (true);
-}
-
-static bool	ph_sleep(t_philo *philo, uint64_t delay)
-{
-	uint64_t	start;
-
-	start = get_time(philo->rules.start);
-	while ((get_time(philo->rules.start) - start) < delay)
-	{
-		if (!check_simulate(philo))
-			return (false);
-		usleep(1000);
-	}
-	return (true);
-}
-
-static bool	eat(t_philo *philo)
-{
-	ready(philo);
-	if (!check_simulate(philo))
-		return (false);
 	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
 	pthread_mutex_lock(philo->death);
 	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
 	pthread_mutex_unlock(philo->death);
 	ph_sleep(philo, philo->rules.time_to_eat);
-	pthread_mutex_unlock(philo->forks[0]);
 	pthread_mutex_unlock(philo->forks[1]);
+	pthread_mutex_unlock(philo->forks[0]);
 	return (check_simulate(philo));
 }
 
@@ -90,7 +78,7 @@ void	*ph_routine(void *ptr)
 	t_philo				*philo;
 
 	philo = ptr;
-	while (philo->simulating)
+	while (check_simulate(philo))
 	{
 		if (!eat(philo))
 			return (NULL);
