@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/23 14:24:15 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/23 16:04:39 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_philo
 	uint32_t			id;
 	uint64_t			last_meal;
 	uint64_t			num_meals;
+	uint64_t			num_philos;
 	pthread_mutex_t		*forks[2];
 	pthread_mutex_t		*death;
 	pthread_mutex_t		*print;
@@ -79,5 +80,10 @@ typedef struct s_state
 }	t_state;
 
 void	*ph_routine(void *ptr);
+void	ph_print(t_philo *philo, char *msg, uint64_t time);
+bool	ph_sleep(t_philo *philo, uint64_t delay);
+bool	ph_is_alive(t_philo *philo);
+void	ph_terminate(t_state *s);
+void	ph_clear(t_state *state);
 
 #endif

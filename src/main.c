@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/23 14:44:02 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/23 16:03:54 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,9 @@ static bool	ph_create_threads(t_state *s)
 	return (true);
 }
 
-static void	ph_assign_forks(t_state *state, uint32_t id)
-{
-	uint32_t	fid[2];
-
-	fid[0] = id;
-	fid[1] = (id + 1) % state->num_philos;
-	state->philos[id].forks[0] = &state->forks[fid[0]];
-	state->philos[id].forks[1] = &state->forks[fid[1]];
-}
-
 static bool	ph_create_philos(t_state *state)
 {
+	t_philo		*ph;
 	uint32_t	i;
 
 	state->philos = malloc(sizeof(t_philo) * state->num_philos);
@@ -49,14 +40,17 @@ static bool	ph_create_philos(t_state *state)
 	i = 0;
 	while (i < state->num_philos)
 	{
-		state->philos[i].simulating = true;
-		state->philos[i].rules = state->rules;
-		state->philos[i].id = i + 1;
-		state->philos[i].last_meal = get_time(state->rules.start);
-		state->philos[i].num_meals = 0;
-		state->philos[i].death = &state->death;
-		state->philos[i].print = &state->print;
-		ph_assign_forks(state, i);
+		ph = &(state->philos[i]);
+		ph->simulating = true;
+		ph->rules = state->rules;
+		ph->id = i + 1;
+		ph->last_meal = get_time(state->rules.start);
+		ph->num_meals = 0;
+		ph->death = &state->death;
+		ph->print = &state->print;
+		ph->num_philos = state->num_philos;
+		ph->forks[0] = &state->forks[i];
+		ph->forks[1] = &state->forks[(i + 1) % state->num_philos];
 		i++;
 	}
 	return (true);
@@ -89,16 +83,6 @@ static bool	ph_init(t_state *state, int argc, char **argv)
 	return (true);
 }
 
-static void	ph_terminate(t_state *s)
-{
-	uint32_t	i;
-
-	i = 0;
-	s->simulating = false;
-	while (i < s->num_philos)
-		s->philos[i++].simulating = false;
-}
-
 static void	ph_simulate(t_state *s)
 {
 	uint32_t		i;
@@ -128,17 +112,6 @@ static void	ph_simulate(t_state *s)
 	}
 }
 
-static void	ph_clear(t_state *state)
-{
-	forks_clear(&state->forks, state->num_philos);
-	if (state->philos)
-		free(state->philos);
-	if (state->threads)
-		free(state->threads);
-	pthread_mutex_destroy(&state->death);
-	pthread_mutex_destroy(&state->print);
-}
-
 int	main(int argc, char **argv)
 {
 	t_state			state;
@@ -154,7 +127,7 @@ int	main(int argc, char **argv)
 	ph_simulate(&state);
 	i = 0;
 	while (i < state.num_philos)
-		pthread_join(state.threads[i++], NULL);	
+		pthread_join(state.threads[i++], NULL);
 	ph_clear(&state);
 	return (0);
 }

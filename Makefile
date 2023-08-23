@@ -1,5 +1,5 @@
 NAME		:= philo
-SRCS		:= main.c utils.c forks.c routine.c
+SRCS		:= main.c utils.c forks.c routine.c philo.c
 INCDIR		:= include/
 BINDIR		:= bin/
 SRCDIR		:= src/
