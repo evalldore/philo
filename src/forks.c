@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:13:58 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/22 13:25:39 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/25 18:48:31 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks)
 {
 	uint32_t	i;
 
+	if (!(*forks))
+		return ;
 	i = 0;
 	while (i < num_forks)
 		pthread_mutex_destroy(&(*forks)[i++]);

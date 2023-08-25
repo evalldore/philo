@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/23 16:14:01 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/25 18:48:47 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,18 @@ static bool	ph_create_threads(t_state *s)
 	return (true);
 }
 
+static void	ph_assign_fork(t_state *s, t_philo *ph, uint32_t i)
+{
+	if (i % 2)
+	{
+		ph->forks[0] = &s->forks[i];
+		ph->forks[1] = &s->forks[(i + 1) % s->num_philos];
+		return ;
+	}
+	ph->forks[0] = &s->forks[(i + 1) % s->num_philos];
+	ph->forks[1] = &s->forks[i];
+}
+
 static bool	ph_create_philos(t_state *state)
 {
 	t_philo		*ph;
@@ -49,8 +61,7 @@ static bool	ph_create_philos(t_state *state)
 		ph->death = &state->death;
 		ph->print = &state->print;
 		ph->num_philos = state->num_philos;
-		ph->forks[0] = &state->forks[i];
-		ph->forks[1] = &state->forks[(i + 1) % state->num_philos];
+		ph_assign_fork(state, ph, i);
 		i++;
 	}
 	return (true);
@@ -60,16 +71,15 @@ static bool	ph_init(t_state *state, int argc, char **argv)
 {
 	state->forks = NULL;
 	state->threads = NULL;
-	state->num_philos = (uint32_t)ft_atoi(argv[1]);
-	state->rules.time_to_die = (uint32_t)ft_atoi(argv[2]);
-	state->rules.time_to_eat = (uint32_t)ft_atoi(argv[3]);
-	state->rules.time_to_sleep = (uint32_t)ft_atoi(argv[4]);
-	if (state->num_philos <= 0 || state->rules.time_to_die <= 0 
-		|| state->rules.time_to_eat <= 0 || state->rules.time_to_sleep <= 0)
+	if (!ft_check_args(argc, argv))
 		return (false);
+	state->num_philos = ft_atoi(argv[1]);
+	state->rules.time_to_die = ft_atoi(argv[2]);
+	state->rules.time_to_eat = ft_atoi(argv[3]);
+	state->rules.time_to_sleep = ft_atoi(argv[4]);
 	state->rules.num_eats = 0;
 	if (argc == 6)
-		state->rules.num_eats = (uint32_t)ft_atoi(argv[5]);
+		state->rules.num_eats = ft_atoi(argv[5]);
 	state->rules.start = get_time(0);
 	state->simulating = true;
 	if (pthread_mutex_init(&state->death, NULL) != 0)
