@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/25 18:48:47 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/25 18:53:16 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static bool	ph_init(t_state *state, int argc, char **argv)
 {
 	state->forks = NULL;
 	state->threads = NULL;
+	state->philos = NULL;
 	if (!ft_check_args(argc, argv))
 		return (false);
 	state->num_philos = ft_atoi(argv[1]);
@@ -141,5 +142,7 @@ int	main(int argc, char **argv)
 	while (i < state.num_philos)
 		pthread_join(state.threads[i++], NULL);
 	ph_clear(&state);
+	pthread_mutex_destroy(&state.death);
+	pthread_mutex_destroy(&state.print);
 	return (0);
 }

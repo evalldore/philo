@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/25 18:45:52 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/25 18:52:37 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,10 @@ bool	ph_sleep(t_philo *philo, uint64_t delay)
 void	ph_clear(t_state *state)
 {
 	forks_clear(&state->forks, state->num_philos);
-	//if (state->philos)
-		//free(state->philos);
+	if (state->philos)
+		free(state->philos);
 	if (state->threads)
 		free(state->threads);
-	pthread_mutex_destroy(&state->death);
-	pthread_mutex_destroy(&state->print);
 }
 
 void	ph_terminate(t_state *s)
