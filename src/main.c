@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/25 18:58:32 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/25 19:01:54 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,6 @@ static bool	ph_create_threads(t_state *s)
 	return (true);
 }
 
-static void	ph_assign_fork(t_state *s, t_philo *ph, uint32_t i)
-{
-	if (i % 2)
-	{
-		ph->forks[0] = &s->forks[i];
-		ph->forks[1] = &s->forks[(i + 1) % s->num_philos];
-		return ;
-	}
-	ph->forks[0] = &s->forks[(i + 1) % s->num_philos];
-	ph->forks[1] = &s->forks[i];
-}
-
 static bool	ph_create_philos(t_state *state)
 {
 	t_philo		*ph;
@@ -61,7 +49,8 @@ static bool	ph_create_philos(t_state *state)
 		ph->death = &state->death;
 		ph->print = &state->print;
 		ph->num_philos = state->num_philos;
-		ph_assign_fork(state, ph, i);
+		ph->forks[0] = &state->forks[i];
+		ph->forks[1] = &state->forks[(i + 1) % state->num_philos];
 		i++;
 	}
 	return (true);
