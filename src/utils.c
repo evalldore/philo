@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 06:32:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/25 18:54:57 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/25 18:58:12 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ bool	ft_check_args(int argc, char **argv)
 			return (false);
 		if (ft_atoi(*argv) >= INT32_MAX)
 			return (false);
-		if (ft_atoi(*argv) <= INT32_MIN)
+		if (ft_atoi(*argv) <= 0)
 			return (false);
 		argv++;
 	}
