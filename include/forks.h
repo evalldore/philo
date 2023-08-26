@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   forks.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:17:05 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/22 13:12:18 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/26 14:09:33 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,6 @@
 
 bool	forks_init(pthread_mutex_t **forks, uint32_t num_forks);
 void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks);
+void	forks_assign(pthread_mutex_t **forks, pthread_mutex_t **philo, uint32_t i, uint32_t num);
 
 #endif

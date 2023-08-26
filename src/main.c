@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/25 19:01:54 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/26 16:51:10 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,18 @@ static bool	ph_create_philos(t_state *state)
 		ph->num_meals = 0;
 		ph->death = &state->death;
 		ph->print = &state->print;
+		ph->meals = &state->meals;
 		ph->num_philos = state->num_philos;
-		ph->forks[0] = &state->forks[i];
-		ph->forks[1] = &state->forks[(i + 1) % state->num_philos];
+		if ((i % 2) == 0)
+		{
+			ph->forks[0] = &state->forks[i];
+			ph->forks[1] = &state->forks[(i + 1) % state->num_philos];
+		}
+		else
+		{
+			ph->forks[0] = &state->forks[(i + 1) % state->num_philos];
+			ph->forks[1] = &state->forks[i];
+		}
 		i++;
 	}
 	return (true);
@@ -58,9 +67,6 @@ static bool	ph_create_philos(t_state *state)
 
 static bool	ph_init(t_state *state, int argc, char **argv)
 {
-	state->forks = NULL;
-	state->threads = NULL;
-	state->philos = NULL;
 	if (!ft_check_args(argc, argv))
 		return (false);
 	state->num_philos = ft_atoi(argv[1]);
@@ -76,6 +82,8 @@ static bool	ph_init(t_state *state, int argc, char **argv)
 		return (false);
 	if (pthread_mutex_init(&state->print, NULL) != 0)
 		return (false);
+	if (pthread_mutex_init(&state->meals, NULL) != 0)
+		return (false);
 	if (!forks_init(&state->forks, state->num_philos))
 		return (false);
 	if (!ph_create_philos(state))
@@ -88,29 +96,25 @@ static bool	ph_init(t_state *state, int argc, char **argv)
 static void	ph_simulate(t_state *s)
 {
 	uint32_t		i;
-	bool			ate_all;
 	uint64_t		curr_time;
 
 	while (s->simulating)
 	{
 		i = 0;
-		ate_all = true;
-		pthread_mutex_lock(&s->death);
 		while (i < s->num_philos)
 		{
 			curr_time = get_time(s->rules.start);
-			if ((curr_time - s->philos[i].last_meal) >= s->rules.time_to_die)
+			pthread_mutex_lock(&s->meals);
+			if ((curr_time - s->philos[i].last_meal) > s->rules.time_to_die)
 			{
+				pthread_mutex_unlock(&s->meals);
 				ph_terminate(s);
 				printf(MSG_DIED, curr_time, s->philos[i].id);
 				break ;
 			}
-			if (s->philos[i++].num_meals != s->rules.num_eats)
-				ate_all = false;
+			else
+				pthread_mutex_unlock(&s->meals);
 		}
-		if (s->rules.num_eats > 0 && ate_all)
-			ph_terminate(s);
-		pthread_mutex_unlock(&s->death);
 	}
 }
 
@@ -121,6 +125,9 @@ int	main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 		return (1);
+	state.forks = NULL;
+	state.threads = NULL;
+	state.philos = NULL;
 	if (!ph_init(&state, argc, argv))
 	{
 		ph_clear(&state);
@@ -133,5 +140,6 @@ int	main(int argc, char **argv)
 	ph_clear(&state);
 	pthread_mutex_destroy(&state.death);
 	pthread_mutex_destroy(&state.print);
+	pthread_mutex_destroy(&state.meals);
 	return (0);
 }

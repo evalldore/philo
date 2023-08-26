@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/25 18:52:37 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/26 16:56:53 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	ph_sleep(t_philo *philo, uint64_t delay)
 
 	start = get_time(philo->rules.start);
 	while ((get_time(philo->rules.start) - start) < delay)
-		usleep(1000);
+		usleep(150);
 	return (ph_is_alive(philo));
 }
 
@@ -57,5 +57,9 @@ void	ph_terminate(t_state *s)
 	i = 0;
 	s->simulating = false;
 	while (i < s->num_philos)
+	{
+		pthread_mutex_lock(&s->death);
 		s->philos[i++].simulating = false;
+		pthread_mutex_unlock(&s->death);
+	}
 }

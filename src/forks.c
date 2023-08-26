@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   forks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:13:58 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/25 18:48:31 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/26 14:12:29 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,16 @@ void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks)
 		pthread_mutex_destroy(&(*forks)[i++]);
 	free(*forks);
 	*forks = NULL;
+}
+
+void	forks_assign(pthread_mutex_t **forks, pthread_mutex_t **philo, uint32_t i, uint32_t num)
+{
+	if ((i % 2) == 0)
+	{
+		philo[0] = forks[i];
+		philo[1] = forks[(i + 1) % num];
+		return ;
+	}
+	philo[0] = forks[(i + 1) % num];
+	philo[1] = forks[i];
 }

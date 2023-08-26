@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/23 16:05:35 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/26 16:42:43 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ static bool	eat(t_philo *philo)
 		return (false);
 	}
 	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
-	pthread_mutex_lock(philo->death);
+	pthread_mutex_lock(philo->meals);
 	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
-	pthread_mutex_unlock(philo->death);
+	pthread_mutex_unlock(philo->meals);
 	ph_sleep(philo, philo->rules.time_to_eat);
-	pthread_mutex_unlock(philo->forks[1]);
 	pthread_mutex_unlock(philo->forks[0]);
+	pthread_mutex_unlock(philo->forks[1]);
 	return (ph_is_alive(philo));
 }
 

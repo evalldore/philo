@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/23 16:04:39 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/26 15:31:05 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,11 @@
 # include "utils.h"
 # include "forks.h"
 
-# define MSG_FORK "%llu %u has taken a fork\n"
-# define MSG_EAT "%llu %u is eating\n"
-# define MSG_SLEEP "%llu %u is sleeping\n"
-# define MSG_THINK "%llu %u is thinking\n"
-# define MSG_DIED "%llu %u\033[0;31m has died\n\033[0;37m"
-/*
-◦ number_of_philosophers: The number of philosophers and also the number
-of forks.
-◦ time_to_die (in milliseconds): If a philosopher didn’t start eating time_to_die
-milliseconds since the beginning of their last meal or the beginning of the sim-
-ulation, they die.
-◦ time_to_eat (in milliseconds): The time it takes for a philosopher to eat.
-During that time, they will need to hold two forks.
-◦ time_to_sleep (in milliseconds): The time a philosopher will spend sleeping.
-◦ number_of_times_each_philosopher_must_eat (optional argument): If all
-philosophers have eaten at least number_of_times_each_philosopher_must_eat
-times, the simulation stops. If not specified, the simulation stops when a
-philosopher dies.
-*/
+# define MSG_FORK "%lu %u has taken a fork\n"
+# define MSG_EAT "%lu %u is eating\n"
+# define MSG_SLEEP "%lu %u is sleeping\n"
+# define MSG_THINK "%lu %u is thinking\n"
+# define MSG_DIED "%lu %u\033[0;31m has died\n\033[0;37m"
 
 typedef struct s_rules
 {
