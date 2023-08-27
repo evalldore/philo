@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/26 16:51:10 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/26 21:51:32 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,7 @@ static bool	ph_create_philos(t_state *state)
 		ph->print = &state->print;
 		ph->meals = &state->meals;
 		ph->num_philos = state->num_philos;
-		if ((i % 2) == 0)
-		{
-			ph->forks[0] = &state->forks[i];
-			ph->forks[1] = &state->forks[(i + 1) % state->num_philos];
-		}
-		else
-		{
-			ph->forks[0] = &state->forks[(i + 1) % state->num_philos];
-			ph->forks[1] = &state->forks[i];
-		}
+		forks_assign(state->forks, ph->forks, i, state->num_philos);
 		i++;
 	}
 	return (true);

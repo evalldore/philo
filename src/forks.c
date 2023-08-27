@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:13:58 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/26 14:12:29 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/26 21:53:46 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks)
 	*forks = NULL;
 }
 
-void	forks_assign(pthread_mutex_t **forks, pthread_mutex_t **philo, uint32_t i, uint32_t num)
+void	forks_assign(pthread_mutex_t *forks, pthread_mutex_t **philo, uint32_t i, uint32_t num)
 {
 	if ((i % 2) == 0)
 	{
-		philo[0] = forks[i];
-		philo[1] = forks[(i + 1) % num];
+		philo[0] = &forks[i];
+		philo[1] = &forks[(i + 1) % num];
 		return ;
 	}
-	philo[0] = forks[(i + 1) % num];
-	philo[1] = forks[i];
+	philo[0] = &forks[(i + 1) % num];
+	philo[1] = &forks[i];
 }
