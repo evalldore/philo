@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/26 23:18:26 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/27 01:44:48 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ static bool	eat(t_philo *philo)
 		return (false);
 	}
 	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
-	pthread_mutex_lock(philo->meals);
+	pthread_mutex_lock(&philo->lock);
 	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
-	pthread_mutex_unlock(philo->meals);
+	pthread_mutex_unlock(&philo->lock);
 	ph_sleep(philo, philo->rules.time_to_eat);
 	pthread_mutex_unlock(philo->forks[0]);
 	pthread_mutex_unlock(philo->forks[1]);
@@ -59,7 +59,7 @@ void	*ph_routine(void *ptr)
 		if (!ph_sleep(philo, philo->rules.time_to_sleep))
 			return (NULL);
 		ph_print(philo, MSG_THINK, get_time(philo->rules.start));
-		usleep(50);
+		usleep(150);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/26 22:52:02 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/27 01:46:00 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,10 @@ static bool	ph_create_philos(t_state *state)
 		ph->id = i + 1;
 		ph->last_meal = get_time(state->rules.start);
 		ph->num_meals = 0;
-		ph->death = &state->death;
 		ph->print = &state->print;
-		ph->meals = &state->meals;
 		ph->num_philos = state->num_philos;
 		forks_assign(state->forks, ph->forks, i, state->num_philos);
+		pthread_mutex_init(&ph->lock, NULL);
 		i++;
 	}
 	return (true);
@@ -69,11 +68,7 @@ static bool	ph_init(t_state *state, int argc, char **argv)
 		state->rules.num_eats = ft_atoi(argv[5]);
 	state->rules.start = get_time(0);
 	state->simulating = true;
-	if (pthread_mutex_init(&state->death, NULL) != 0)
-		return (false);
 	if (pthread_mutex_init(&state->print, NULL) != 0)
-		return (false);
-	if (pthread_mutex_init(&state->meals, NULL) != 0)
 		return (false);
 	if (!forks_init(&state->forks, state->num_philos))
 		return (false);
@@ -95,16 +90,15 @@ static void	ph_simulate(t_state *s)
 		while (i < s->num_philos)
 		{
 			curr_time = get_time(s->rules.start);
-			pthread_mutex_lock(&s->meals);
+			pthread_mutex_lock(&s->philos[i].lock);
 			if ((curr_time - s->philos[i].last_meal) > s->rules.time_to_die)
 			{
-				pthread_mutex_unlock(&s->meals);
+				pthread_mutex_unlock(&s->philos[i].lock);
 				ph_terminate(s);
-				printf(MSG_DIED, curr_time, s->philos[i].id);
+				ph_print(&s->philos[i], MSG_DIED, curr_time);
 				return ;
 			}
-			pthread_mutex_unlock(&s->meals);
-			i++;
+			pthread_mutex_unlock(&s->philos[i++].lock);
 		}
 	}
 }
@@ -129,8 +123,6 @@ int	main(int argc, char **argv)
 	while (i < state.num_philos)
 		pthread_join(state.threads[i++], NULL);
 	ph_clear(&state);
-	pthread_mutex_destroy(&state.death);
 	pthread_mutex_destroy(&state.print);
-	pthread_mutex_destroy(&state.meals);
 	return (0);
 }

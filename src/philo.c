@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/26 23:06:29 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/26 23:55:02 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 bool	ph_is_alive(t_philo *philo)
 {
-	pthread_mutex_lock(philo->death);
+	pthread_mutex_lock(&philo->lock);
 	if (!philo->simulating)
 	{
-		pthread_mutex_unlock(philo->death);
+		pthread_mutex_unlock(&philo->lock);
 		return (false);
 	}
-	pthread_mutex_unlock(philo->death);
+	pthread_mutex_unlock(&philo->lock);
 	return (true);
 }
 
@@ -43,9 +43,15 @@ bool	ph_sleep(t_philo *philo, uint64_t delay)
 
 void	ph_clear(t_state *state)
 {
+	uint32_t	i;
 	forks_clear(&state->forks, state->num_philos);
 	if (state->philos)
+	{
+		i = 0;
+		while (i < state->num_philos)
+			pthread_mutex_destroy(&state->philos[i++].lock);
 		free(state->philos);
+	}
 	if (state->threads)
 		free(state->threads);
 }
@@ -58,8 +64,9 @@ void	ph_terminate(t_state *s)
 	s->simulating = false;
 	while (i < s->num_philos)
 	{
-		pthread_mutex_lock(&s->death);
-		s->philos[i++].simulating = false;
-		pthread_mutex_unlock(&s->death);
+		pthread_mutex_lock(&s->philos[i].lock);
+		s->philos[i].simulating = false;
+		pthread_mutex_unlock(&s->philos[i].lock);
+		i++;
 	}
 }
