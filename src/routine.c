@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/26 16:42:43 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/26 23:18:26 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,8 @@ void	*ph_routine(void *ptr)
 		ph_print(philo, MSG_SLEEP, get_time(philo->rules.start));
 		if (!ph_sleep(philo, philo->rules.time_to_sleep))
 			return (NULL);
-		if (!ph_is_alive(philo))
-			return (NULL);
 		ph_print(philo, MSG_THINK, get_time(philo->rules.start));
+		usleep(50);
 	}
 	return (NULL);
 }

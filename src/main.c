@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/26 21:51:32 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/26 22:52:02 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,10 @@ static void	ph_simulate(t_state *s)
 				pthread_mutex_unlock(&s->meals);
 				ph_terminate(s);
 				printf(MSG_DIED, curr_time, s->philos[i].id);
-				break ;
+				return ;
 			}
-			else
-				pthread_mutex_unlock(&s->meals);
+			pthread_mutex_unlock(&s->meals);
+			i++;
 		}
 	}
 }
