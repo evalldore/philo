@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/27 01:44:48 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/27 06:09:44 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,24 @@ static bool	pickup_fork(t_philo *philo, uint32_t fork_index)
 	return (true);
 }
 
-static bool	eat(t_philo *philo)
+static void	eat(t_philo *philo)
 {
 	if (!pickup_fork(philo, 0))
-		return (false);
+		return ;
 	if (!pickup_fork(philo, 1))
 	{
 		pthread_mutex_unlock(philo->forks[0]);
-		return (false);
+		return ;
 	}
-	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
 	pthread_mutex_lock(&philo->lock);
+	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
 	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
 	pthread_mutex_unlock(&philo->lock);
 	ph_sleep(philo, philo->rules.time_to_eat);
 	pthread_mutex_unlock(philo->forks[0]);
 	pthread_mutex_unlock(philo->forks[1]);
-	return (ph_is_alive(philo));
+	return;
 }
 
 void	*ph_routine(void *ptr)
@@ -53,10 +53,12 @@ void	*ph_routine(void *ptr)
 		return (NULL);
 	while (ph_is_alive(philo))
 	{
-		if (!eat(philo))
+		eat(philo);
+		if (!ph_is_alive(philo))
 			return (NULL);
 		ph_print(philo, MSG_SLEEP, get_time(philo->rules.start));
-		if (!ph_sleep(philo, philo->rules.time_to_sleep))
+		ph_sleep(philo, philo->rules.time_to_sleep);
+		if (!ph_is_alive(philo))
 			return (NULL);
 		ph_print(philo, MSG_THINK, get_time(philo->rules.start));
 		usleep(150);

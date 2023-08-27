@@ -4,7 +4,7 @@ INCDIR		:= include/
 BINDIR		:= bin/
 SRCDIR		:= src/
 OBJS		:= $(addprefix $(BINDIR), $(SRCS:.c=.o))
-CFLAGS		:= -Wall -Wextra -Werror -O1
+CFLAGS		:= -Wall -Wextra -Werror -lpthread
 RM			:= rm -f
 HEADERS		:= -I ./include
 CC			:= gcc
@@ -12,7 +12,7 @@ CC			:= gcc
 all : $(NAME)
 
 leaks :
-	valgrind --leak-check=full ./philo 10 20000 3500 2000 3 100
+	valgrind --leak-check=full ./philo 1 2 3 4
 
 $(BINDIR)%.o : $(SRCDIR)%.c
 	@$(CC) -c $(CFLAGS) -o $@ $^ $(HEADERS)

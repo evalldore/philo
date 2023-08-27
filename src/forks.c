@@ -6,11 +6,12 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:13:58 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/26 23:50:13 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/27 06:02:03 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "forks.h"
+#include<stdio.h>
 
 bool	forks_init(pthread_mutex_t **forks, uint32_t num_forks)
 {
@@ -40,12 +41,15 @@ void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks)
 
 void	forks_assign(pthread_mutex_t *forks, pthread_mutex_t **philo, uint32_t i, uint32_t num)
 {
+	uint32_t	next;
+
+	next = (i + 1) % num;
 	if ((i % 2) == 0)
 	{
 		philo[0] = &forks[i];
-		philo[1] = &forks[(i + 1) % num];
+		philo[1] = &forks[next];
 		return ;
 	}
-	philo[0] = &forks[(i + 1) % num];
+	philo[0] = &forks[next];
 	philo[1] = &forks[i];
 }

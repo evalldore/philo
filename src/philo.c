@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/26 23:55:02 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/27 06:05:03 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,12 @@
 
 bool	ph_is_alive(t_philo *philo)
 {
+	bool	simulating;
+
 	pthread_mutex_lock(&philo->lock);
-	if (!philo->simulating)
-	{
-		pthread_mutex_unlock(&philo->lock);
-		return (false);
-	}
+	simulating = philo->simulating;
 	pthread_mutex_unlock(&philo->lock);
-	return (true);
+	return (simulating);
 }
 
 void	ph_print(t_philo *philo, char *msg, uint64_t time)
@@ -31,14 +29,13 @@ void	ph_print(t_philo *philo, char *msg, uint64_t time)
 	pthread_mutex_unlock(philo->print);
 }
 
-bool	ph_sleep(t_philo *philo, uint64_t delay)
+void	ph_sleep(t_philo *philo, uint64_t delay)
 {
 	uint64_t	start;
 
 	start = get_time(philo->rules.start);
-	while ((get_time(philo->rules.start) - start) < delay)
-		usleep(150);
-	return (ph_is_alive(philo));
+	while (ph_is_alive(philo) && (get_time(philo->rules.start) - start) < delay)
+		usleep(50);
 }
 
 void	ph_clear(t_state *state)
