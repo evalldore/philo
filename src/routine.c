@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/27 06:09:44 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/27 06:37:12 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,12 @@ static void	eat(t_philo *philo)
 		return ;
 	}
 	pthread_mutex_lock(&philo->lock);
-	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
 	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
 	pthread_mutex_unlock(&philo->lock);
+	if (!ph_is_alive(philo))
+		return ;
+	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
 	ph_sleep(philo, philo->rules.time_to_eat);
 	pthread_mutex_unlock(philo->forks[0]);
 	pthread_mutex_unlock(philo->forks[1]);
