@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/27 01:46:00 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/28 01:13:01 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ static bool	ph_create_philos(t_state *state)
 		ph->print = &state->print;
 		ph->num_philos = state->num_philos;
 		forks_assign(state->forks, ph->forks, i, state->num_philos);
-		pthread_mutex_init(&ph->lock, NULL);
+		if (pthread_mutex_init(&ph->lock, NULL) != 0)
+			return (false);
 		i++;
 	}
 	return (true);
@@ -84,11 +85,16 @@ static void	ph_simulate(t_state *s)
 	uint32_t		i;
 	uint64_t		curr_time;
 
-	while (s->simulating)
+	while (ph_is_simulating(s))
 	{
 		i = 0;
 		while (i < s->num_philos)
 		{
+			if (!ph_is_alive(&s->philos[i]))
+			{
+				i++;
+				continue;
+			}
 			curr_time = get_time(s->rules.start);
 			pthread_mutex_lock(&s->philos[i].lock);
 			if ((curr_time - s->philos[i].last_meal) > s->rules.time_to_die)

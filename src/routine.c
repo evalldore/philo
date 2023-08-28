@@ -6,11 +6,20 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/27 06:37:12 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/27 23:45:11 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void	ph_sleep(t_philo *philo, uint64_t delay)
+{
+	uint64_t	start;
+
+	start = get_time(philo->rules.start);
+	while (ph_is_alive(philo) && (get_time(philo->rules.start) - start) < delay)
+		usleep(50);
+}
 
 static bool	pickup_fork(t_philo *philo, uint32_t fork_index)
 {
@@ -43,7 +52,20 @@ static void	eat(t_philo *philo)
 	ph_sleep(philo, philo->rules.time_to_eat);
 	pthread_mutex_unlock(philo->forks[0]);
 	pthread_mutex_unlock(philo->forks[1]);
-	return;
+}
+
+static bool	is_satisfied(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->lock);
+	if (philo->rules.num_eats > 0 && philo->num_meals >= philo->rules.num_eats)
+	{
+		philo->simulating = false;
+		pthread_mutex_unlock(&philo->lock);
+		ph_print(philo, MSG_SATISFIED, get_time(philo->rules.start));
+		return (true);
+	}
+	pthread_mutex_unlock(&philo->lock);
+	return (false);
 }
 
 void	*ph_routine(void *ptr)
@@ -56,14 +78,13 @@ void	*ph_routine(void *ptr)
 	while (ph_is_alive(philo))
 	{
 		eat(philo);
-		if (!ph_is_alive(philo))
+		if (is_satisfied(philo) || !ph_is_alive(philo))
 			return (NULL);
 		ph_print(philo, MSG_SLEEP, get_time(philo->rules.start));
 		ph_sleep(philo, philo->rules.time_to_sleep);
 		if (!ph_is_alive(philo))
 			return (NULL);
 		ph_print(philo, MSG_THINK, get_time(philo->rules.start));
-		usleep(150);
 	}
 	return (NULL);
 }

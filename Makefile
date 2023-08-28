@@ -4,7 +4,7 @@ INCDIR		:= include/
 BINDIR		:= bin/
 SRCDIR		:= src/
 OBJS		:= $(addprefix $(BINDIR), $(SRCS:.c=.o))
-CFLAGS		:= -Wall -Wextra -Werror -lpthread
+CFLAGS		:= -Wall -Wextra -Werror -lpthread -fsanitize=thread
 RM			:= rm -f
 HEADERS		:= -I ./include
 CC			:= gcc

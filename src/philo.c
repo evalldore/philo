@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/27 06:05:03 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/27 07:43:34 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,6 @@ void	ph_print(t_philo *philo, char *msg, uint64_t time)
 	pthread_mutex_unlock(philo->print);
 }
 
-void	ph_sleep(t_philo *philo, uint64_t delay)
-{
-	uint64_t	start;
-
-	start = get_time(philo->rules.start);
-	while (ph_is_alive(philo) && (get_time(philo->rules.start) - start) < delay)
-		usleep(50);
-}
-
 void	ph_clear(t_state *state)
 {
 	uint32_t	i;
@@ -51,6 +42,25 @@ void	ph_clear(t_state *state)
 	}
 	if (state->threads)
 		free(state->threads);
+}
+
+bool	ph_is_simulating(t_state *s)
+{
+	uint32_t	i;
+
+	i = 0;
+	while (i < s->num_philos)
+	{
+		pthread_mutex_lock(&s->philos[i].lock);
+		if (s->philos[i].simulating)
+		{
+			pthread_mutex_unlock(&s->philos[i].lock);
+			return (true);
+		}
+		pthread_mutex_unlock(&s->philos[i].lock);
+		i++;
+	}
+	return (false);
 }
 
 void	ph_terminate(t_state *s)
