@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   forks.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 05:13:58 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/27 06:02:03 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/28 18:41:49 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "forks.h"
-#include<stdio.h>
+#include <stdio.h>
 
 bool	forks_init(pthread_mutex_t **forks, uint32_t num_forks)
 {
@@ -39,17 +39,17 @@ void	forks_clear(pthread_mutex_t **forks, uint32_t num_forks)
 	*forks = NULL;
 }
 
-void	forks_assign(pthread_mutex_t *forks, pthread_mutex_t **philo, uint32_t i, uint32_t num)
+void	forks(pthread_mutex_t *f, pthread_mutex_t **p, uint32_t i, uint32_t n)
 {
 	uint32_t	next;
 
-	next = (i + 1) % num;
+	next = (i + 1) % n;
 	if ((i % 2) == 0)
 	{
-		philo[0] = &forks[i];
-		philo[1] = &forks[next];
+		p[0] = &f[i];
+		p[1] = &f[next];
 		return ;
 	}
-	philo[0] = &forks[next];
-	philo[1] = &forks[i];
+	p[0] = &f[next];
+	p[1] = &f[i];
 }

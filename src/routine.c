@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/27 23:45:11 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/28 18:26:04 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,8 @@ static void	eat(t_philo *philo)
 		pthread_mutex_unlock(philo->forks[0]);
 		return ;
 	}
-	pthread_mutex_lock(&philo->lock);
 	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
-	pthread_mutex_unlock(&philo->lock);
 	if (!ph_is_alive(philo))
 		return ;
 	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
@@ -56,15 +54,11 @@ static void	eat(t_philo *philo)
 
 static bool	is_satisfied(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->lock);
 	if (philo->rules.num_eats > 0 && philo->num_meals >= philo->rules.num_eats)
 	{
-		philo->simulating = false;
-		pthread_mutex_unlock(&philo->lock);
 		ph_print(philo, MSG_SATISFIED, get_time(philo->rules.start));
 		return (true);
 	}
-	pthread_mutex_unlock(&philo->lock);
 	return (false);
 }
 

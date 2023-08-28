@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/27 23:44:55 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/28 18:24:42 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ typedef struct s_philo
 	uint64_t			num_philos;
 	pthread_mutex_t		*forks[2];
 	pthread_mutex_t		*print;
-	pthread_mutex_t		lock;
-	bool				simulating;
+	pthread_mutex_t		*death;
+	bool				*simulating;
 	t_rules				rules;
 }	t_philo;
 
@@ -61,6 +61,7 @@ typedef struct s_state
 	t_philo			*philos;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
+	pthread_mutex_t	death;
 }	t_state;
 
 void	*ph_routine(void *ptr);

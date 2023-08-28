@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/27 07:43:34 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/28 18:42:04 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,24 @@
 
 bool	ph_is_alive(t_philo *philo)
 {
-	bool	simulating;
+	bool		simulating;
+	uint64_t	t;
 
-	pthread_mutex_lock(&philo->lock);
-	simulating = philo->simulating;
-	pthread_mutex_unlock(&philo->lock);
-	return (simulating);
+	pthread_mutex_lock(philo->death);
+	simulating = *philo->simulating;
+	pthread_mutex_unlock(philo->death);
+	if (!simulating)
+		return (false);
+	t = get_time(philo->rules.start) - philo->last_meal;
+	if (t > philo->rules.time_to_die)
+	{
+		pthread_mutex_lock(philo->death);
+		*philo->simulating = false;
+		pthread_mutex_unlock(philo->death);
+		ph_print(philo, MSG_DIED, get_time(philo->rules.start));
+		return (false);
+	}
+	return (true);
 }
 
 void	ph_print(t_philo *philo, char *msg, uint64_t time)
@@ -31,49 +43,10 @@ void	ph_print(t_philo *philo, char *msg, uint64_t time)
 
 void	ph_clear(t_state *state)
 {
-	uint32_t	i;
 	forks_clear(&state->forks, state->num_philos);
 	if (state->philos)
-	{
-		i = 0;
-		while (i < state->num_philos)
-			pthread_mutex_destroy(&state->philos[i++].lock);
 		free(state->philos);
-	}
 	if (state->threads)
 		free(state->threads);
 }
 
-bool	ph_is_simulating(t_state *s)
-{
-	uint32_t	i;
-
-	i = 0;
-	while (i < s->num_philos)
-	{
-		pthread_mutex_lock(&s->philos[i].lock);
-		if (s->philos[i].simulating)
-		{
-			pthread_mutex_unlock(&s->philos[i].lock);
-			return (true);
-		}
-		pthread_mutex_unlock(&s->philos[i].lock);
-		i++;
-	}
-	return (false);
-}
-
-void	ph_terminate(t_state *s)
-{
-	uint32_t	i;
-
-	i = 0;
-	s->simulating = false;
-	while (i < s->num_philos)
-	{
-		pthread_mutex_lock(&s->philos[i].lock);
-		s->philos[i].simulating = false;
-		pthread_mutex_unlock(&s->philos[i].lock);
-		i++;
-	}
-}
