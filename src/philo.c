@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/28 18:42:04 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/29 00:36:28 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ bool	ph_is_alive(t_philo *philo)
 	if (t > philo->rules.time_to_die)
 	{
 		pthread_mutex_lock(philo->death);
+		if (!*philo->simulating)
+		{
+			pthread_mutex_unlock(philo->death);
+			return (false);
+		}
 		*philo->simulating = false;
 		pthread_mutex_unlock(philo->death);
 		ph_print(philo, MSG_DIED, get_time(philo->rules.start));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/28 18:41:42 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/29 00:16:19 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static bool	ph_create_philos(t_state *state)
 		ph->num_meals = 0;
 		ph->print = &state->print;
 		ph->death = &state->death;
+		ph->pickup = &state->pickup;
 		ph->num_philos = state->num_philos;
 		forks(state->forks, ph->forks, i, state->num_philos);
 		i++;
@@ -73,6 +74,8 @@ static bool	ph_init(t_state *state, int argc, char **argv)
 	if (pthread_mutex_init(&state->print, NULL) != 0)
 		return (false);
 	if (pthread_mutex_init(&state->death, NULL) != 0)
+		return (false);
+	if (pthread_mutex_init(&state->pickup, NULL) != 0)
 		return (false);
 	if (!forks_init(&state->forks, state->num_philos))
 		return (false);

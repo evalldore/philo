@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/28 22:43:21 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/29 00:32:56 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,35 +21,45 @@ static void	ph_sleep(t_philo *philo, uint64_t delay)
 		usleep(50);
 }
 
-static bool	pickup_fork(t_philo *philo, uint32_t fork_index)
+static bool	can_pickup(t_philo *philo)
 {
-	pthread_mutex_lock(philo->forks[fork_index]);
-	if (!ph_is_alive(philo))
+	bool	can;
+
+	pthread_mutex_lock(philo->pickup);
+	can = philo->forks[0]->check && philo->forks[1]->check;
+	if (can)
 	{
-		pthread_mutex_unlock(philo->forks[fork_index]);
-		return (false);
+		philo->forks[0]->check = false;
+		philo->forks[1]->check = false;
 	}
-	ph_print(philo, MSG_FORK, get_time(philo->rules.start));
-	return (true);
+	pthread_mutex_unlock(philo->pickup);
+	if (can)
+	{
+		pthread_mutex_lock(&philo->forks[0]->mutex);
+		ph_print(philo, MSG_FORK, get_time(philo->rules.start));
+		pthread_mutex_lock(&philo->forks[1]->mutex);
+		ph_print(philo, MSG_FORK, get_time(philo->rules.start));
+	}
+	return (can);
 }
 
 static void	eat(t_philo *philo)
 {
-	if (!pickup_fork(philo, 0))
-		return ;
-	if (!pickup_fork(philo, 1))
+	while (!can_pickup(philo))
 	{
-		pthread_mutex_unlock(philo->forks[0]);
-		return ;
+		if (!ph_is_alive(philo))
+			return;
 	}
 	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
-	if (!ph_is_alive(philo))
-		return ;
 	ph_print(philo, MSG_EAT, get_time(philo->rules.start));
 	ph_sleep(philo, philo->rules.time_to_eat);
-	pthread_mutex_unlock(philo->forks[0]);
-	pthread_mutex_unlock(philo->forks[1]);
+	pthread_mutex_lock(philo->pickup);
+	philo->forks[0]->check = true;
+	philo->forks[1]->check = true;
+	pthread_mutex_unlock(philo->pickup);
+	pthread_mutex_unlock(&philo->forks[0]->mutex);
+	pthread_mutex_unlock(&philo->forks[1]->mutex);
 }
 
 static bool	is_satisfied(t_philo *philo)
@@ -69,6 +79,7 @@ void	*ph_routine(void *ptr)
 	philo = ptr;
 	if (philo->num_philos < 2)
 	{
+		ph_print(philo, MSG_FORK, get_time(philo->rules.start));
 		ph_sleep(philo, philo->rules.time_to_die);
 		ph_print(philo, MSG_DIED, get_time(philo->rules.start));
 		return (NULL);
@@ -76,7 +87,7 @@ void	*ph_routine(void *ptr)
 	while (ph_is_alive(philo))
 	{
 		eat(philo);
-		if (is_satisfied(philo) || !ph_is_alive(philo))
+		if (!ph_is_alive(philo) || is_satisfied(philo))
 			return (NULL);
 		ph_print(philo, MSG_SLEEP, get_time(philo->rules.start));
 		ph_sleep(philo, philo->rules.time_to_sleep);
