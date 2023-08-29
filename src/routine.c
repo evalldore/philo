@@ -6,7 +6,7 @@
 /*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/28 22:06:33 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/28 22:43:21 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,11 @@ void	*ph_routine(void *ptr)
 
 	philo = ptr;
 	if (philo->num_philos < 2)
+	{
+		ph_sleep(philo, philo->rules.time_to_die);
+		ph_print(philo, MSG_DIED, get_time(philo->rules.start));
 		return (NULL);
+	}
 	while (ph_is_alive(philo))
 	{
 		eat(philo);
