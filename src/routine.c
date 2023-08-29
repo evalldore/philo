@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/28 18:26:04 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/08/28 22:06:33 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	*ph_routine(void *ptr)
 		if (!ph_is_alive(philo))
 			return (NULL);
 		ph_print(philo, MSG_THINK, get_time(philo->rules.start));
+		usleep(150);
 	}
 	return (NULL);
 }
