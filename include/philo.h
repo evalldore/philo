@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/29 00:15:58 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/30 18:14:48 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # define MSG_EAT "%lu %u is eating\n"
 # define MSG_SLEEP "%lu %u is sleeping\n"
 # define MSG_THINK "%lu %u is thinking\n"
-# define MSG_DIED "%lu %u\033[0;31m has died\n\033[0;37m"
+# define MSG_DIED "%lu %u\033[0;31m died\n\033[0;37m"
 # define MSG_SATISFIED "%lu %d \033[0;32msatified\033[0;37m\n"
 
 typedef struct s_rules
@@ -67,10 +67,11 @@ typedef struct s_state
 }	t_state;
 
 void	*ph_routine(void *ptr);
-void	ph_print(t_philo *philo, char *msg, uint64_t time);
+void	ph_print(t_philo *philo, char *msg);
 bool	ph_is_alive(t_philo *philo);
 void	ph_terminate(t_state *s);
 void	ph_clear(t_state *state);
-bool	ph_is_simulating(t_state *s);
+bool	ph_is_simulating(t_philo *philo);
+bool	ph_check_simulation(t_philo *philo);
 
 #endif

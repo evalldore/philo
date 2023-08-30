@@ -3,46 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/29 00:36:28 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/08/30 19:06:55 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-bool	ph_is_alive(t_philo *philo)
+bool	ph_is_simulating(t_philo *philo)
 {
 	bool		simulating;
-	uint64_t	t;
 
 	pthread_mutex_lock(philo->death);
 	simulating = *philo->simulating;
 	pthread_mutex_unlock(philo->death);
-	if (!simulating)
-		return (false);
+	return (simulating);
+}
+
+bool	ph_is_alive(t_philo *philo)
+{
+	uint64_t	t;
+
 	t = get_time(philo->rules.start) - philo->last_meal;
-	if (t > philo->rules.time_to_die)
+	return (t < philo->rules.time_to_die);
+}
+
+bool	ph_check_simulation(t_philo *philo)
+{
+	if (!ph_is_simulating(philo))
+		return (false);
+	if (!ph_is_alive(philo))
 	{
-		pthread_mutex_lock(philo->death);
-		if (!*philo->simulating)
-		{
-			pthread_mutex_unlock(philo->death);
+		if (!ph_is_simulating(philo))
 			return (false);
-		}
+		pthread_mutex_lock(philo->death);
+		ph_print(philo, MSG_DIED);
 		*philo->simulating = false;
 		pthread_mutex_unlock(philo->death);
-		ph_print(philo, MSG_DIED, get_time(philo->rules.start));
 		return (false);
 	}
 	return (true);
 }
 
-void	ph_print(t_philo *philo, char *msg, uint64_t time)
+void	ph_print(t_philo *philo, char *msg)
 {
 	pthread_mutex_lock(philo->print);
-	printf(msg, time, philo->id);
+	printf(msg, get_time(philo->rules.start), philo->id);
 	pthread_mutex_unlock(philo->print);
 }
 
