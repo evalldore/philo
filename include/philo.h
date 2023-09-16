@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/30 18:14:48 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/09/05 04:09:43 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # define MSG_EAT "%lu %u is eating\n"
 # define MSG_SLEEP "%lu %u is sleeping\n"
 # define MSG_THINK "%lu %u is thinking\n"
-# define MSG_DIED "%lu %u\033[0;31m died\n\033[0;37m"
+# define MSG_DIED "%lu %u\033[0;31m died\n\033[0;33m"
 # define MSG_SATISFIED "%lu %d \033[0;32msatified\033[0;37m\n"
 
 typedef struct s_rules

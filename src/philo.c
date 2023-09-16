@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/08/30 19:06:55 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/09/10 19:28:59 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,16 @@ bool	ph_is_alive(t_philo *philo)
 
 bool	ph_check_simulation(t_philo *philo)
 {
-	if (!ph_is_simulating(philo))
-		return (false);
-	if (!ph_is_alive(philo))
+	if (!ph_is_alive(philo) && ph_is_simulating(philo))
 	{
-		if (!ph_is_simulating(philo))
-			return (false);
 		pthread_mutex_lock(philo->death);
-		ph_print(philo, MSG_DIED);
 		*philo->simulating = false;
+		ph_print(philo, MSG_DIED);
 		pthread_mutex_unlock(philo->death);
 		return (false);
 	}
+	if (!ph_is_simulating(philo))
+		return (false);
 	return (true);
 }
 

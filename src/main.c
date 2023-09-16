@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/08/30 15:42:31 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/09/11 17:04:28 by niceguy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,5 +107,6 @@ int	main(int argc, char **argv)
 	ph_clear(&state);
 	pthread_mutex_destroy(&state.print);
 	pthread_mutex_destroy(&state.death);
+	pthread_mutex_destroy(&state.pickup);
 	return (0);
 }
