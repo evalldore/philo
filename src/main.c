@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/09/18 17:53:11 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/09/18 18:00:32 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static void	simulate(t_state *state)
 {
 	uint32_t	i;
 
-	while (state->simulating && ph_all_satisfied(state))
+	while (state->simulating && !ph_all_satisfied(state))
 	{
 		i = 0;
 		while (i < state->num_philos)
