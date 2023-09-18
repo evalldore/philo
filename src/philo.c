@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/23 15:55:33 by evallee-          #+#    #+#             */
-/*   Updated: 2023/09/18 17:47:11 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/09/18 18:05:18 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,3 @@ void	ph_clear(t_state *state)
 	if (state->threads)
 		free(state->threads);
 }
-

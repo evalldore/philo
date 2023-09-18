@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/09/18 16:34:45 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/09/18 18:04:32 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void	*ph_routine(void *ptr)
 	t_philo				*philo;
 
 	philo = ptr;
+	if (philo->num_philos < 2)
+		return (NULL);
 	if ((philo->id % 2) == 0)
 		ph_sleep(philo, philo->rules.time_to_eat);
 	while (ph_is_simulating(philo))

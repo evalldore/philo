@@ -6,7 +6,7 @@
 /*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:17:36 by niceguy           #+#    #+#             */
-/*   Updated: 2023/09/18 18:00:32 by evallee-         ###   ########.fr       */
+/*   Updated: 2023/09/18 18:05:00 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ static bool	ph_create_philos(t_state *state)
 {
 	t_philo		*ph;
 	uint32_t	i;
-
 
 	state->philos = malloc(sizeof(t_philo) * state->num_philos);
 	if (!state->philos)
