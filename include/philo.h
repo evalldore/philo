@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 02:18:35 by niceguy           #+#    #+#             */
-/*   Updated: 2023/09/05 04:09:43 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/09/18 17:48:13 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ typedef struct s_philo
 	uint64_t			last_meal;
 	uint64_t			num_meals;
 	uint64_t			num_philos;
-	t_fork				*forks[2];
+	pthread_mutex_t		*forks[2];
 	pthread_mutex_t		*print;
 	pthread_mutex_t		*death;
-	pthread_mutex_t		*pickup;
+	pthread_mutex_t		lock;
 	bool				*simulating;
 	t_rules				rules;
 }	t_philo;
@@ -60,10 +60,9 @@ typedef struct s_state
 	t_rules			rules;
 	pthread_t		*threads;
 	t_philo			*philos;
-	t_fork			*forks;
+	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
 	pthread_mutex_t	death;
-	pthread_mutex_t	pickup;
 }	t_state;
 
 void	*ph_routine(void *ptr);
@@ -72,6 +71,7 @@ bool	ph_is_alive(t_philo *philo);
 void	ph_terminate(t_state *s);
 void	ph_clear(t_state *state);
 bool	ph_is_simulating(t_philo *philo);
-bool	ph_check_simulation(t_philo *philo);
+bool	ph_is_satisfied(t_philo *philo);
+bool	ph_all_satisfied(t_state *state);
 
 #endif

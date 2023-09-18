@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: niceguy <niceguy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: evallee- <evallee-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 06:27:15 by niceguy           #+#    #+#             */
-/*   Updated: 2023/09/16 18:06:50 by niceguy          ###   ########.fr       */
+/*   Updated: 2023/09/18 16:34:45 by evallee-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,50 +25,31 @@ static void	ph_sleep(t_philo *philo, uint64_t delay)
 	}
 }
 
-static bool	can_pickup(t_philo *philo)
-{
-	bool	can;
-
-	pthread_mutex_lock(philo->pickup);
-	can = philo->forks[0]->check && philo->forks[1]->check;
-	if (can)
-	{
-		philo->forks[0]->check = false;
-		philo->forks[1]->check = false;
-	}
-	pthread_mutex_unlock(philo->pickup);
-	return (can);
-}
-
 static bool	eat(t_philo *philo)
 {
-	while (!can_pickup(philo))
+	pthread_mutex_lock(philo->forks[0]);
+	if (!ph_is_simulating(philo))
 	{
-		if (!ph_is_alive(philo))
-			break;
-	}
-	if (!ph_check_simulation(philo))
-	{
-		pthread_mutex_lock(philo->pickup);
-		philo->forks[0]->check = true;
-		philo->forks[1]->check = true;
-		pthread_mutex_unlock(philo->pickup);
+		pthread_mutex_unlock(philo->forks[0]);
 		return (false);
 	}
-	pthread_mutex_lock(&philo->forks[0]->mutex);
 	ph_print(philo, MSG_FORK);
-	pthread_mutex_lock(&philo->forks[1]->mutex);
+	pthread_mutex_lock(philo->forks[1]);
+	if (!ph_is_simulating(philo))
+	{
+		pthread_mutex_unlock(philo->forks[0]);
+		pthread_mutex_unlock(philo->forks[1]);
+		return (false);
+	}
 	ph_print(philo, MSG_FORK);
+	pthread_mutex_lock(&philo->lock);
 	philo->last_meal = get_time(philo->rules.start);
 	philo->num_meals++;
+	pthread_mutex_unlock(&philo->lock);
 	ph_print(philo, MSG_EAT);
 	ph_sleep(philo, philo->rules.time_to_eat);
-	pthread_mutex_unlock(&philo->forks[1]->mutex);
-	pthread_mutex_unlock(&philo->forks[0]->mutex);
-	pthread_mutex_lock(philo->pickup);
-	philo->forks[0]->check = true;
-	philo->forks[1]->check = true;
-	pthread_mutex_unlock(philo->pickup);
+	pthread_mutex_unlock(philo->forks[1]);
+	pthread_mutex_unlock(philo->forks[0]);
 	return (true);
 }
 
@@ -87,23 +68,17 @@ void	*ph_routine(void *ptr)
 	t_philo				*philo;
 
 	philo = ptr;
-	if (philo->num_philos < 2)
-	{
-		ph_sleep(philo, philo->rules.time_to_die);
-		ph_print(philo, MSG_DIED);
-		return (NULL);
-	}
 	if ((philo->id % 2) == 0)
 		ph_sleep(philo, philo->rules.time_to_eat);
-	while (ph_check_simulation(philo))
+	while (ph_is_simulating(philo))
 	{
-		if (!eat(philo) || is_satisfied(philo))
+		if (!eat(philo))
 			return (NULL);
-		if (!ph_check_simulation(philo))
+		if (!ph_is_simulating(philo) || is_satisfied(philo))
 			return (false);
 		ph_print(philo, MSG_SLEEP);
 		ph_sleep(philo, philo->rules.time_to_sleep);
-		if (!ph_check_simulation(philo))
+		if (!ph_is_simulating(philo))
 			return (NULL);
 		ph_print(philo, MSG_THINK);
 	}
